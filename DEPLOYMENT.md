@@ -24,7 +24,7 @@ Images are built on the VPS and tagged with the git SHA, the same way as `nousre
 ./scripts/deploy.sh              # deploys HEAD of main
 ```
 
-The script first runs `npm run verify:links` and stops if any external link is wrong or dead. Then:
+The script refuses a dirty tree, runs `npm test` and `npm run verify:links` (stops if any external link is wrong or dead), then:
 
 1. Copies the committed tree to `/opt/neuronara/<sha>`.
 2. Runs `docker build -t neuronara:<sha>` on the server.
