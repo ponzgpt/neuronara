@@ -18,7 +18,7 @@ npm run build && node .next/standalone/server.js   # http://localhost:3000/healt
 
 ## Deploy / update
 
-Images are built on the VPS and tagged with the git SHA, the same way as `nousresearch-application` and `javier-ponz-site`:
+Images are built on the VPS and tagged with the git SHA, like every other site:
 
 ```bash
 ./scripts/deploy.sh              # deploys HEAD of main
