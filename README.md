@@ -33,7 +33,13 @@ covers what it would take to grow beyond that.
 | Stage | Feedback loop with its first user; library and answer checks improve each round |
 | Measured | Retrieval and literature quality, per language, on held-out question sets (`npm run eval`) |
 | Not yet measured | Clinical correctness of the written answers: that needs a clinician to read them |
-| Authorship | Specified by me (Javier Ponz), written with an AI coding agent under rules I set; every link and source was checked against the real page |
+| Authorship | Vibe-coded: specified and tested by me (Javier Ponz), written by AI coding agents. Every link and source is checked against the real page by `npm run verify:links` |
+
+## How this was made
+
+I'm a vibe coder. I decide what to build, write the spec and the rules it has to follow, and test the result until it
+does what I said. AI coding agents write the code; I don't write code by hand. Commits under my name were made by an
+agent working for me.
 
 ## Quick start
 
