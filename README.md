@@ -4,7 +4,36 @@
 
 **Live:** https://neuronara.technoir.cloud
 
+> **Not clinical advice.** Neuronara points to published guidance and literature and writes an AI summary that cites
+> it. Always read the source before acting on anything, and never enter patient identifiers.
+
 Awaji or Gold Coast? ACNS terminology from 2012 or 2021? Whose minimum EEG standard applies? The answers are scattered across societies, journals and decades. Neuronara searches a curated library of society guidance (IFCN, ACNS, AANEM, ILAE, AASM, EAN/PNS, ISIN…) and the open literature (Europe PMC, which includes MEDLINE/PubMed). It says which standard applies, where they differ and where each comes from, and ends with a one-line bottom line. Reports, protocols, audits and teaching are the downstream uses.
+
+## Why it exists
+
+I built Neuronara for my partner, a clinical neurophysiologist. Her day involves questions like the ones above. The
+answer is usually in a society document she knows exists but has to dig out, often in a different country's version.
+She is its first user, and the tool is in a **feedback loop** with her:
+
+1. She asks it real questions from her work.
+2. Every miss gets written down: a wrong or missing document, a dead link, an acronym read with another specialty's
+   meaning, an answer claiming more than its source says.
+3. The miss becomes a fix in code or data, plus a question in the evaluation set (`evals/`), so it stays fixed.
+4. New evaluation questions are written after each round of tuning and scored once before anything is changed. The
+   score reported is that first look, not the best score after tuning (see [Languages and how well it works](#languages-and-how-well-it-works)).
+
+It is a working tool for one clinician, not a product with customers. [docs/POSITIONING.md](docs/POSITIONING.md)
+covers what it would take to grow beyond that.
+
+## Status
+
+| | |
+|---|---|
+| Users | One clinical neurophysiologist, plus anyone who finds the live site |
+| Stage | Feedback loop with its first user; library and answer checks improve each round |
+| Measured | Retrieval and literature quality, per language, on held-out question sets (`npm run eval`) |
+| Not yet measured | Clinical correctness of the written answers: that needs a clinician to read them |
+| Authorship | Specified by me (Javier Ponz), written with an AI coding agent under rules I set; every link and source was checked against the real page |
 
 ## Quick start
 
@@ -73,22 +102,6 @@ Every external link (society sites, databases, national PDFs, DOIs) is checked b
 | Live | Neuronara library, Europe PMC | Queried on every question |
 | Via your library | Cochrane, Embase, MEDLINE Complete | Paywalled DOIs open through the clinician's EZproxy/OpenAthens prefix (set in **Databases**) |
 | Hand-off | PubMed, OpenEvidence, Consensus, AASM Scoring Manual | Opened with the question prefilled where the site supports it. OpenEvidence has no public API |
-
-## Market and positioning
-
-Nobody publishes a global headcount. These anchors are published figures:
-
-- **ABPN active certificates (31 Dec 2025):** Clinical Neurophysiology 2,498 · Epilepsy 2,396 · Neuromuscular 978 · Sleep 1,247.
-- **AANEM:** more than 7,500 members.
-- **JSCN (Japan):** about 3,000 members.
-
-Estimate: about **40–60k physicians** worldwide read neurophysiology, plus roughly twice as many technologists. At $150–300 per physician per year that is **about $6–18M ARR**. Three decisions follow from how small that is:
-
-1. **Global from day one.** No single country is big enough.
-2. **Sell to departments and institutions**, not only to individuals. The proxy bridge lets Neuronara ride on the Embase/Cochrane licences they already pay for.
-3. **Win on depth, not breadth.** Neuronara focuses on society guidance, criteria, terminology and regional differences. Reports and papers are second-order uses. Broad questions are handed off to Consensus and OpenEvidence rather than competing with them.
-
-**Global vs local:** a global core (IFCN, ILAE, WFN, ISIN, ISCEV) plus a region layer that ranks local bodies higher: US (ACNS, AANEM, AASM, ASNM), UK (BSCN), Spain (SENFC), Germany (DGKN), Japan (JSCN), EU (EAN/PNS).
 
 ## Languages and how well it works
 
