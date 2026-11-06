@@ -161,3 +161,7 @@ Years marked "c." come from the PDF's metadata because the document prints no da
 ## Privacy
 
 Questions go to Europe PMC and, when a key is set, to the LLM provider. Free OpenRouter models may keep prompts. Nothing is stored or logged server-side, and preferences stay in the browser. Don't enter patient identifiers.
+
+## Licence
+
+MIT. See [LICENSE](LICENSE).
