@@ -7,7 +7,7 @@ import Anthropic from "@anthropic-ai/sdk";
 
 // Free models come and go on OpenRouter; override with a comma-separated OPENROUTER_MODELS.
 const FREE_MODELS = (process.env.OPENROUTER_MODELS ??
-  "deepseek/deepseek-v4-flash-0731:free,google/gemma-4-31b-it:free,qwen/qwen3.8-27b:free").split(",").map((s) => s.trim());
+  "google/gemma-4-31b-it:free,nvidia/nemotron-3.5-super-vl:free,google/gemma-4-26b-a4b-it:free").split(",").map((s) => s.trim());
 
 export type Synthesis = { text: string | null; refused?: boolean };
 type Chat = { system: string; user: string };
