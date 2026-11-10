@@ -4,7 +4,9 @@
 
 - **Seen:** `/api/ask` on neuronara.technoir.cloud reports `"provider":"keyless"`. Because of issue 2 (one free reply every 45 s per IP, shared by every visitor), most questions get "The answer service is busy right now". In a run of 10 questions (heldout5), 8 got no answer.
 - **Fix (Javier only, it's a secret):** `./scripts/set-llm-key.sh openrouter` with an OpenRouter key. The free models in `FREE_MODELS` keep it at $0, and `/api/ask` is already rate-limited per IP (20 per 10 min). The service restarts on its own.
-- **Then:** re-run `SET=heldout5 BASE=https://neuronara.technoir.cloud npm run eval` to get a fair first-look score with a key.
+- **Free model list updated on `main` (959dc89):** OpenRouter has removed 2 of the 3 default free models (deepseek-v4-flash-0731, qwen3.8-27b). The new list is gemma-4-31b, nemotron-3.5-super-vl and gemma-4-26b-a4b. **Not deployed yet**, because the deploy's link check stopped it (next point).
+- **Deploy is blocked by the link check:** aasm.org and its Scoring Manual page now sit behind a Cloudflare bot check (403), so `verify:links` needs a manual verification. Open https://aasm.org and https://aasm.org/clinical-resources/scoring-manual/ in your browser, confirm both are the right pages, then add `AASM: "2026-11-1x", "aasm-manual": "2026-11-1x"` to `VERIFIED_BY_HAND` in `lib/catalog.ts`, commit, and `./scripts/deploy.sh`.
+- **Order:** verify AASM, deploy, set the key, then re-run `SET=heldout5 BASE=https://neuronara.technoir.cloud npm run eval` to get a fair first-look score with a key.
 
 
 Found 2026-11-10 while checking the live site. Each one waits for Javier, and for a clinician's read of any answer it changes.
