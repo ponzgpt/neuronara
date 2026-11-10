@@ -20,7 +20,7 @@ Results are written to `evals/results/` (git-ignored) with every answer, so fail
 | `heldout.json` | 20 × EN/ES (+4 DE) | Written next, then tuned against too |
 | `heldout2.json` | 14 × EN/ES | Written next; its failures were read and fixed, so it is no longer clean either |
 | `heldout3.json` | 12 × EN/ES | **Written after all tuning and scored once, before any fix.** This is the honest generalisation number |
-| `heldout4.json` | 1 × EN/ES so far | Started 2026-11-10 from misses seen on the live site. Not tuned against yet: score it once before fixing anything |
+| `heldout4.json` | 1 × EN/ES so far | Started 2026-11-10 from misses seen on the live site. Not tuned against yet. First-look score (live, 2026-11-10): EN 85 (answer 63: retrieval right, key facts missing), ES 60 (no answer within the timeout) |
 
 **Rule:** a set stops being a test the moment you tune against it. When a set has been used to fix something, write a new one for the next measurement, and report the first-look score of the newest set, not the best score of an old one.
 
