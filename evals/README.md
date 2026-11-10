@@ -21,6 +21,7 @@ Results are written to `evals/results/` (git-ignored) with every answer, so fail
 | `heldout2.json` | 14 × EN/ES | Written next; its failures were read and fixed, so it is no longer clean either |
 | `heldout3.json` | 12 × EN/ES | **Written after all tuning and scored once, before any fix.** This is the honest generalisation number |
 | `heldout4.json` | 1 × EN/ES so far | Started 2026-11-10 from misses seen on the live site. Not tuned against yet. First-look score (live, 2026-11-10): EN 85 (answer 63: retrieval right, key facts missing), ES 60 (no answer within the timeout) |
+| `heldout5.json` | 5 × EN/ES | Written 2026-11-10 after the alias fix, **before it ships**: standards known by a name their abstract never uses, or with no abstract at all. Score once on the live site, then again after the fix. First run (live, 2026-11-10, **keyless**): retrieval EN 96 / ES 76, but only 2 of 10 answered ("busy", see `docs/OPEN-ISSUES.md` #0). Not a fair answer score: re-run once a key is set |
 
 **Rule:** a set stops being a test the moment you tune against it. When a set has been used to fix something, write a new one for the next measurement, and report the first-look score of the newest set, not the best score of an old one.
 

@@ -1,5 +1,12 @@
 # Open issues
 
+## 0. Most urgent: the live site has no LLM key (found 2026-11-10, 21:08)
+
+- **Seen:** `/api/ask` on neuronara.technoir.cloud reports `"provider":"keyless"`. Because of issue 2 (one free reply every 45 s per IP, shared by every visitor), most questions get "The answer service is busy right now". In a run of 10 questions (heldout5), 8 got no answer.
+- **Fix (Javier only, it's a secret):** `./scripts/set-llm-key.sh openrouter` with an OpenRouter key. The free models in `FREE_MODELS` keep it at $0, and `/api/ask` is already rate-limited per IP (20 per 10 min). The service restarts on its own.
+- **Then:** re-run `SET=heldout5 BASE=https://neuronara.technoir.cloud npm run eval` to get a fair first-look score with a key.
+
+
 Found 2026-11-10 while checking the live site. Each one waits for Javier, and for a clinician's read of any answer it changes.
 
 ## 1. "What are the Awaji criteria?" gets a non-answer

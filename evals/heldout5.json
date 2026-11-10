@@ -1,0 +1,47 @@
+[
+  {
+    "id": "salzburg",
+    "en": "What are the Salzburg criteria for nonconvulsive status epilepticus?",
+    "es": "¿Qué son los criterios de Salzburgo para el estado epiléptico no convulsivo?",
+    "gold": ["Unified EEG terminology and criteria for nonconvulsive status epilepticus"],
+    "facts": ["salzburg|unified", "nonconvulsive|no convulsivo|NCSE|EENC"],
+    "lit": "salzburg|nonconvulsive status|no convulsivo",
+    "note": "Alias-only: the abstract never says 'Salzburg'."
+  },
+  {
+    "id": "lrda",
+    "en": "What is LRDA on an ICU EEG?",
+    "es": "¿Qué es el LRDA en un EEG de UCI?",
+    "gold": ["Standardized Critical Care EEG Terminology"],
+    "facts": ["rhythmic delta|delta r[ií]tmic"],
+    "lit": "rhythmic delta|LRDA|critical care EEG|periodic discharges",
+    "note": "Gold document has no abstract in the library: tests the answer with title-only context."
+  },
+  {
+    "id": "bipd",
+    "en": "What are BIPDs in critical care EEG?",
+    "es": "¿Qué son las BIPD en el EEG de cuidados críticos?",
+    "gold": ["Standardized Critical Care EEG Terminology"],
+    "facts": ["bilateral independent|bilaterales independientes"],
+    "lit": "periodic discharges|BIPD|critical care EEG",
+    "note": "Gold document has no abstract in the library."
+  },
+  {
+    "id": "aanem-who",
+    "en": "What is the AANEM position on who should perform and interpret EMG?",
+    "es": "¿Cuál es la postura de la AANEM sobre quién debe realizar e interpretar el EMG?",
+    "gold": ["Proper Performance and Interpretation of Electrodiagnostic Studies"],
+    "facts": ["AANEM", "physician|médico"],
+    "lit": "electrodiagnos|electromyograph|EMG",
+    "note": "Gold document has no abstract in the library."
+  },
+  {
+    "id": "gold-coast-what",
+    "en": "What are the Gold Coast criteria for ALS?",
+    "es": "¿Qué son los criterios de Gold Coast para la ELA?",
+    "gold": ["new diagnostic criteria for ALS"],
+    "facts": ["gold coast"],
+    "lit": "gold coast|amyotrophic|esclerosis lateral",
+    "note": "Gold document has no abstract in the library; als-criteria (questions.json) only asks for the difference."
+  }
+]
