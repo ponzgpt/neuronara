@@ -1,0 +1,11 @@
+[
+  {
+    "id": "awaji-what",
+    "en": "What are the Awaji criteria for ALS?",
+    "es": "¿Qué son los criterios de Awaji para la ELA?",
+    "gold": ["Electrodiagnostic criteria for diagnosis of ALS"],
+    "facts": ["fascicul", "awaji"],
+    "lit": "awaji|amyotrophic|esclerosis lateral|ALS",
+    "note": "Live miss, 2026-11-10: the 2008 IFCN paper (the Awaji consensus) ranked first in Standards, but the answer said the criteria's 'specific content is not provided in the excerpts' and cited only two literature abstracts. Key fact expected: fasciculation potentials count as evidence of ongoing denervation when chronic neurogenic change is present, and EMG findings are equivalent to clinical lower motor neuron signs."
+  }
+]
