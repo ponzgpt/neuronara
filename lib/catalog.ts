@@ -109,3 +109,13 @@ export function searchHref(q: string, region: string, modalities: string[]): str
   const s = p.toString();
   return s ? `/?${s}` : "/";
 }
+
+/** The first ~240 characters of an abstract, cut at a sentence end when one falls late enough, else at a word. `more` = there is text beyond it. */
+export function excerpt(abstract: string, max = 240): { text: string; more: boolean } {
+  const t = abstract.replace(/\s+/g, " ").trim();
+  if (t.length <= max) return { text: t, more: false };
+  const head = t.slice(0, max);
+  const stop = Math.max(head.lastIndexOf(". "), head.lastIndexOf("? "), head.lastIndexOf("! "));
+  if (stop >= max * 0.5) return { text: head.slice(0, stop + 1), more: true };
+  return { text: head.replace(/\s+\S*$/, "").replace(/[,;:(\s]+$/, "") + "…", more: true };
+}

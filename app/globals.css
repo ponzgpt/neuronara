@@ -266,3 +266,18 @@ body:has(dialog[open]) { overflow: hidden; } /* the page behind must not scroll 
 .related-note { margin: .5rem 0; font-size: .82rem; color: var(--text-muted); }
 .related .list { margin-top: .5rem; }
 .results .related .row { padding-left: 1.3rem; }
+
+/* Result card: abstract excerpt (3 lines, "More" shows all), bold year, primary "Open source" link */
+.meta .yr { color: var(--text); font-weight: 700; }
+.abs, .abs-short { margin: .55rem 0 0; font-size: .88rem; line-height: 1.5; color: var(--text); }
+.abs-short { opacity: .85; }
+.abs summary { list-style: none; cursor: pointer; }
+.abs summary::-webkit-details-marker { display: none; }
+.abs-text { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; opacity: .85; overflow-wrap: anywhere; }
+.abs-more::after { content: "More"; color: var(--primary); font-size: .8rem; font-weight: 600; }
+.abs-full, .abs[open] .abs-text { display: none; }
+.abs[open] .abs-full { display: block; opacity: .85; overflow-wrap: anywhere; }
+.abs-more { display: block; }
+.abs[open] .abs-more::after { content: "Less"; }
+.meta .open-src { margin-left: auto; font-weight: 700; font-size: .84rem; border: 1px solid var(--border); border-radius: var(--radius-pill); padding: .15rem .7rem; }
+.meta .open-src:hover { background: var(--tint); text-decoration: none; }

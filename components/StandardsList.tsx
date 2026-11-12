@@ -1,13 +1,14 @@
 // Curated documents grouped by what they settle (lib/catalog DOC_TYPES). Within each group, relevance order is kept
 // but documents from the user's region come first, then international bodies, then other regions' societies.
 // Region never moves a document across groups or past a more relevant group-mate from the same tier.
-import { citationHref, DOC_TYPES, SOCIETY_SITES, TIER_ORDER, tierOf, type Tier } from "@/lib/catalog";
+import { citationHref, DOC_TYPES, excerpt, SOCIETY_SITES, TIER_ORDER, tierOf, type Tier } from "@/lib/catalog";
 import type { Entry } from "@/lib/search";
 
 const LANG = { en: "English", de: "Deutsch", es: "Español" };
 
 
 function Row({ e, tier, kind, n, proxy }: { e: Entry; tier: Tier; kind: string; n?: number; proxy: string }) {
+  const ex = excerpt(e.abstract);
   return (
     <li className="row">
       {n && <span className="cite-no" aria-label={`Source ${n}`}>{n}</span>}
@@ -16,8 +17,11 @@ function Row({ e, tier, kind, n, proxy }: { e: Entry; tier: Tier; kind: string; 
       <div className="meta">
         <span>{kind}</span>
         <span className="soc">{e.societies.join(" · ")}</span>
-        <span>{e.approxYear ? "c. " : ""}{e.year}</span>
+        <b className="yr">{e.approxYear ? "c. " : ""}{e.year}</b>
       </div>
+      {ex.text && (ex.more
+        ? <details className="abs"><summary><span className="abs-text">{ex.text}</span><span className="abs-full">{e.abstract}</span><span className="abs-more" /></summary></details>
+        : <p className="abs-short">{ex.text}</p>)}
       <div className="meta">
         <span className={e.retired ? "tag warn" : "tag current"}>{e.retired ? "Superseded" : "Current"}</span>
         {tier === "local" && <span className="tag local">Local</span>}
@@ -27,6 +31,7 @@ function Row({ e, tier, kind, n, proxy }: { e: Entry; tier: Tier; kind: string; 
           : proxy && !e.url && e.doi && <a href={citationHref(e, proxy)} target="_blank" rel="noreferrer">Via your library</a>}
         {e.lang && e.lang !== "en" && <span className="tag lang" title="Language of the document">{LANG[e.lang]}</span>}
         {e.pmcid && <a href={`https://europepmc.org/article/PMC/${e.pmcid}`} target="_blank" rel="noreferrer">Full text</a>}
+        <a className="open-src" href={citationHref(e, proxy)} target="_blank" rel="noreferrer">Open source ↗</a>
       </div>
     </li>
   );

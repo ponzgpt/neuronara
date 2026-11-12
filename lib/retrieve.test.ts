@@ -3,6 +3,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { rank, type Entry } from "./search.ts";
+import { excerpt } from "./catalog.ts";
 import { numberSources, parseParams, retrieve } from "./retrieve.ts";
 
 const lib: Entry[] = ["library.json", "national.json"].flatMap((f) => JSON.parse(readFileSync(new URL(`../data/${f}`, import.meta.url), "utf8")));
@@ -36,4 +37,13 @@ test("Awaji / Gold Coast question: exactly the two ALS documents are strong, the
 
 test("a broad question still has at least two strong standards", async () => {
   assert.ok((await strongOf("EEG minimum recording standards")).standards.length >= 2);
+});
+
+test("excerpt cuts at a sentence or word boundary and flags when text remains", () => {
+  assert.deepEqual(excerpt("  Short one. "), { text: "Short one.", more: false });
+  const long = `${"Alpha beta gamma. ".repeat(10)}${"word ".repeat(40)}`;
+  const e = excerpt(long);
+  assert.ok(e.more && e.text.endsWith(".") && e.text.length <= 240);
+  const w = excerpt("word ".repeat(100));
+  assert.ok(w.more && w.text.endsWith("…") && !/\s…$/.test(w.text) && w.text.length <= 241);
 });
