@@ -21,10 +21,10 @@ export const REGIONS: Record<string, { label: string; short: string; societies: 
 
 // The ontology results are grouped by: what kind of question a document settles. Order = display order.
 export const DOC_TYPES = [
-  { id: "criteria", label: "Criteria & grading", short: "criteria sets" },
-  { id: "terminology", label: "Terminology, classification & scoring", short: "terminologies & classifications" },
-  { id: "technical", label: "Technical standards", short: "technical standards" },
-  { id: "practice", label: "Practice guidelines & consensus", short: "practice guidelines" },
+  { id: "criteria", kind: "Criteria", label: "Criteria & grading", short: "criteria sets" },
+  { id: "terminology", kind: "Terminology", label: "Terminology, classification & scoring", short: "terminologies & classifications" },
+  { id: "technical", kind: "Technical standard", label: "Technical standards", short: "technical standards" },
+  { id: "practice", kind: "Practice guideline", label: "Practice guidelines & consensus", short: "practice guidelines" },
 ] as const;
 
 // Rotating search suggestions. Each one shows a different thing Neuronara settles, and lib/search.test.ts

@@ -60,6 +60,7 @@ h1 { font-size: clamp(2.1rem, 5.6vw, 3.5rem); line-height: 1.06; letter-spacing:
 .tag.open, .tag.live { background: var(--tint); color: var(--primary); }
 .tag.guideline, .tag.proxy { background: var(--blush); color: var(--on-blush); }
 .tag.literature, .tag.link { background: var(--tint-soft); color: var(--text-muted); border: 1px solid var(--divider); }
+.tag.current { background: var(--tint); color: var(--primary); }
 .tag.warn { background: var(--warn-bg); color: var(--warn); }
 .empty { padding: 2rem; text-align: center; color: var(--text-muted); background: var(--surface); border: 1px dashed var(--divider); border-radius: var(--radius); }
 
