@@ -1,39 +1,31 @@
 "use client";
-// Results, in the order a clinician resolves a question:
-//   answer (if any) → society standards, grouped by what they settle → literature → elsewhere.
+// Results, in the order a clinician resolves a question: society standards, grouped by what they settle, then literature.
 // Standards and literature sit side by side on wide screens and stack on narrow ones.
-// Numbers match the [n] citations in the answer.
+// Numbers are the [n] citations of /api/search and of the prompt handed to the reader's own AI.
 import { citationHref, CONNECTORS } from "@/lib/catalog";
 import type { Entry } from "@/lib/search";
-import type { AskResponse } from "@/lib/types";
-import { Answer } from "@/components/Answer";
-import { AnswerPending } from "@/components/AnswerPending";
+import type { SearchResult } from "@/lib/types";
 import { StandardsList } from "@/components/StandardsList";
 
-type Props = { q: string; entries: Entry[]; result: AskResponse | null; asking: boolean; proxy: string; papers: string; region: string; missing: string[] };
+type Props = { q: string; entries: Entry[]; data: SearchResult | null; pending: boolean; limited: boolean; proxy: string; papers: string; region: string; missing: string[] };
 
-const key = (x: { doi: string | null; pmid: string | null }) => x.doi ?? x.pmid ?? "";
-
-export function Results({ q, entries, result, asking, proxy, papers, region, missing }: Props) {
-  const cited = new Map(result?.sources.filter((s) => s.kind === "guideline").map((s) => [key(s), s.n]));
-  const literature = result?.sources.filter((s) => s.kind === "literature");
-  const status = result?.error ?? (result && !result.pending && !result.answer ? result.note : undefined);
+export function Results({ q, entries, data, pending, limited, proxy, papers, region, missing }: Props) {
+  const cited = new Map(data?.standards.map((s) => [s.id, s.n]));
+  const literature = data?.literature;
 
   return (
     <div aria-live="polite">
-      {result?.pending && result.provider !== "none" && <AnswerPending provider={result.provider} sources={result.sources.length} />}
-      {result?.answer && <Answer text={result.answer} sources={result.sources} proxy={proxy} />}
-      {status && <p className="status">{status}</p>}
+      {limited && <p className="status">Too many searches in a short time: literature is paused for a few minutes. The standards below still work.</p>}
 
       <div className="results">
         <section className="col" aria-labelledby="col-standards">
           <h2 id="col-standards" className="col-title">Standards <span>{entries.length}</span></h2>
-          <StandardsList entries={entries} proxy={proxy} region={region} missing={missing} searched={q.trim() !== ""} citeNo={(e) => cited.get(key(e))} />
+          <StandardsList entries={entries} proxy={proxy} region={region} missing={missing} searched={q.trim() !== ""} citeNo={(e) => cited.get(e.id)} />
         </section>
 
         <section className="col" aria-labelledby="col-literature">
           <h2 id="col-literature" className="col-title">Literature <span>{literature?.length ?? 0}</span></h2>
-          {asking && !result ? (
+          {pending ? (
             <div className="card skeleton" aria-label="Searching the literature"><i /><i /><i /></div>
           ) : literature?.length ? (
             <ul className="list">
@@ -46,7 +38,7 @@ export function Results({ q, entries, result, asking, proxy, papers, region, mis
               ))}
             </ul>
           ) : (
-            <p className="empty">{literature ? "No matching papers." : <>Ask a question to search {papers} papers in Europe PMC.</>}</p>
+            <p className="empty">{literature && !limited ? "No matching papers." : limited ? "" : <>Ask a question to search {papers} papers in Europe PMC.</>}</p>
           )}
           <p className="handoff">
             Also ask

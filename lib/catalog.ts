@@ -99,3 +99,13 @@ export function citationHref(s: { doi: string | null; pmid: string | null; url?:
   const doi = `https://doi.org/${s.doi}`;
   return proxy && !s.openAccess ? proxy + encodeURIComponent(doi) : doi;
 }
+
+// The shareable URL of a result: only non-default region and scope are written, so links stay short.
+export function searchHref(q: string, region: string, modalities: string[]): string {
+  const p = new URLSearchParams();
+  if (q) p.set("q", q);
+  if (region !== "global") p.set("region", region);
+  if (modalities.length) p.set("modalities", modalities.join(","));
+  const s = p.toString();
+  return s ? `/?${s}` : "/";
+}
