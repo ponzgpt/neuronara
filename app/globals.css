@@ -278,3 +278,6 @@ body:has(dialog[open]) { overflow: hidden; } /* the page behind must not scroll 
 /* Edge cases: long titles wrap at 375 px; anchors land below the sticky header */
 .row .title, .title-en, .col-title, .meta { overflow-wrap: anywhere; }
 [id], .row { scroll-margin-top: 4.5rem; }
+.foot p { margin: 0 0 .35rem; }
+.foot a { color: var(--text-muted); text-decoration: underline; text-underline-offset: 2px; }
+.foot a:hover { color: var(--primary); }

@@ -1,6 +1,7 @@
 import "./tokens.css";
 import "./globals.css";
 import type { Metadata } from "next";
+import { Footer } from "@/components/Footer";
 import { Figtree } from "next/font/google";
 
 // Self-hosted at build time: no request to Google from the clinician's browser.
@@ -21,7 +22,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en-GB" className={figtree.variable} data-theme="light" suppressHydrationWarning>
       <head><script dangerouslySetInnerHTML={{ __html: THEME }} /></head>
-      <body>{children}</body>
+      <body>{children}<Footer /></body>
     </html>
   );
 }

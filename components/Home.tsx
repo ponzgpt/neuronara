@@ -126,11 +126,6 @@ export function Home({ papers, data, limited, urlRegion, urlScope, children }: P
           : children}
       </main>
 
-      <footer className="foot">
-        Neuronara points to published sources and does not replace clinical judgement ·{" "}
-        <a href="https://github.com/ponzgpt/neuronara" target="_blank" rel="noreferrer">Source</a>
-      </footer>
-
       <DatabasesSheet ref={sources} region={region} proxy={proxy} onProxy={setProxy} />
     </>
   );
