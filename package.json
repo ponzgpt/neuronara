@@ -11,7 +11,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "test": "node --test lib/search.test.ts",
+    "test": "node --test lib/search.test.ts lib/retrieve.test.ts",
     "library": "node scripts/build-library.mjs",
     "library:national": "node scripts/build-national.mjs",
     "eval": "node scripts/eval.mjs",

@@ -1,6 +1,6 @@
 // Europe PMC: open REST API covering MEDLINE/PubMed + PMC. No key needed.
 // https://europepmc.org/RestfulWebService
-import type { Source } from "@/lib/types";
+import type { Paper } from "@/lib/types";
 
 const API = "https://www.ebi.ac.uk/europepmc/webservices/rest/search";
 
@@ -20,7 +20,7 @@ export function buildQuery(q: string | string[][], fieldFilter = true): string {
   return `TITLE_ABS:(${terms})${fieldFilter ? ` AND TITLE_ABS:${FIELD}` : ""} AND HAS_ABSTRACT:y AND (SRC:MED OR SRC:PMC)`;
 }
 
-export async function searchLiterature(q: string | string[][], size = 6, fieldFilter = true): Promise<Omit<Source, "n">[]> {
+export async function searchLiterature(q: string | string[][], size = 6, fieldFilter = true): Promise<Omit<Paper, "n">[]> {
   const query = buildQuery(q, fieldFilter);
   try {
     const res = await fetch(`${API}?format=json&resultType=core&pageSize=${size}&query=${encodeURIComponent(query)}`, {

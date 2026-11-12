@@ -1,4 +1,4 @@
-// Caps /api/ask per client so a public deployment can't burn the Anthropic key.
+// Caps search per client so a public deployment cannot hammer Europe PMC.
 // ponytail: in-memory fixed window, per process. Resets on deploy and doesn't share across replicas;
 // move to Redis (already running under Dokploy) if Neuronara ever runs more than one replica.
 
@@ -14,3 +14,5 @@ export function allow(key: string, limit = 20, windowMs = 10 * 60_000): boolean 
   }
   return ++h.count <= limit;
 }
+
+export const clientIp = (h: Headers) => h.get("x-forwarded-for")?.split(",")[0].trim() ?? "local";
