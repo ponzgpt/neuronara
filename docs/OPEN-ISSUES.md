@@ -2,6 +2,8 @@
 
 ## 0. Most urgent: the live site has no LLM key (found 2026-11-10, 21:08)
 
+**Closed 2026-11-12:** the server-side LLM was removed, so there is no key to set. Historical notes below.
+
 - **Seen:** `/api/ask` on neuronara.technoir.cloud reports `"provider":"keyless"`. Because of issue 2 (one free reply every 45 s per IP, shared by every visitor), most questions get "The answer service is busy right now". In a run of 10 questions (heldout5), 8 got no answer.
 - **Fix (Javier only, it's a secret):** `./scripts/set-llm-key.sh openrouter` with an OpenRouter key. The free models in `FREE_MODELS` keep it at $0, and `/api/ask` is already rate-limited per IP (20 per 10 min). The service restarts on its own.
 - **Free model list updated on `main` (959dc89):** OpenRouter has removed 2 of the 3 default free models (deepseek-v4-flash-0731, qwen3.8-27b). The new list is gemma-4-31b, nemotron-3.5-super-vl and gemma-4-26b-a4b. **Not deployed yet**, because the deploy's link check stopped it (next point).
@@ -12,6 +14,8 @@
 Found 2026-11-10 while checking the live site. Each one waits for Javier, and for a clinician's read of any answer it changes.
 
 ## 1. "What are the Awaji criteria?" gets a non-answer
+
+**Closed 2026-11-12:** no written answers exist any more; the ranked standards (Awaji paper first) are the result. Historical notes below.
 
 - **Seen:** the 2008 IFCN paper (*Electrodiagnostic criteria for diagnosis of ALS*, which is the Awaji consensus) ranks first among the standards. Even so, the answer said the criteria's "specific content is not provided in the excerpts" and cited only two literature abstracts.
 - **Cause:** the model sees each standard's title and abstract. That abstract describes the Awaji rules (fasciculation potentials count as denervation; EMG findings are equivalent to clinical signs) but never uses the word "Awaji", which lives only in the curated `keywords`.
@@ -27,6 +31,8 @@ Found 2026-11-10 while checking the live site. Each one waits for Javier, and fo
   With the fix, the Spanish answer now states the Awaji rules from source [1]: fasciculation potentials count like fibrillations and positive sharp waves, EMG evidence of chronic neurogenic change counts like clinical signs, and "Probable Laboratory-Supported" becomes obsolete. It drops the qualifier "in the context of a suspected clinical diagnosis of ALS", which a clinician should check. Since heldout4 has now been tuned against, the next measurement needs a heldout5.
 
 ## 2. The keyless fallback is failing
+
+**Closed 2026-11-12:** the keyless fallback was removed together with the LLM. Historical notes below.
 
 - **Seen:** with no API key, every answer request to the keyless provider (text.pollinations.ai) came back **402 Payment Required**, so no answer was written. A plain GET to the same host still returns 200, so their API for this kind of request seems to have changed.
 - **Why it matters:** non-negotiable 2 in AGENTS.md ("Answers must work with no LLM key").

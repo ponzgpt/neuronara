@@ -2,7 +2,7 @@
   "name": "neuronara",
   "version": "0.2.0",
   "private": true,
-  "description": "Searchable clinical neurophysiology guidance with cited answers.",
+  "description": "Searchable clinical neurophysiology guidance with sources one click away.",
   "type": "module",
   "engines": {
     "node": ">=22.18"
@@ -18,7 +18,6 @@
     "verify:links": "node scripts/verify-links.mjs"
   },
   "dependencies": {
-    "@anthropic-ai/sdk": "^0.126.0",
     "next": "^16.3.5",
     "react": "^19.3.0",
     "react-dom": "^19.3.0"

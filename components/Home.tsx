@@ -1,6 +1,6 @@
 "use client";
 // The home page is the tool. The hero is the search box; the marketing sections (passed as children)
-// show only while idle. As soon as there's a query, an answer or a modality scope, results take over.
+// show only while idle. As soon as there's a query or a modality scope, results take over.
 // The logo returns to the idle state.
 import { useEffect, useMemo, useRef, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
@@ -127,7 +127,7 @@ export function Home({ papers, data, limited, urlRegion, urlScope, children }: P
       </main>
 
       <footer className="foot">
-        Neuronara answers from published sources and does not replace clinical judgement ·{" "}
+        Neuronara points to published sources and does not replace clinical judgement ·{" "}
         <a href="https://github.com/ponzgpt/neuronara" target="_blank" rel="noreferrer">Source</a>
       </footer>
 

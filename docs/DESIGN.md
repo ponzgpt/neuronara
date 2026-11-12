@@ -82,12 +82,12 @@ Neuronara helps clinical neurophysiologists work out which standard, criterion o
 3. **Metrics under the headline** are real counts: documents per type from `data/library.json`, the number of societies, and the Europe PMC record count (fetched live, cached for a day). Don't round up and don't pad the numbers.
 4. **Examples rotate** three at a time every 6 s. They pause on hover or focus and stay still under `prefers-reduced-motion`. Clicking one asks it straight away. `lib/search.test.ts` fails if any example stops finding a document.
 5. **Results follow an ontology** of the question the clinician is trying to settle:
-   - **Answer**, when an LLM is configured: at most 5 sentences, then a **Bottom line**.
+   - **Ask your own AI**: a copyable prompt and links that open it in Claude or ChatGPT. Neuronara writes no answers.
    - **Standards** (left): curated society documents grouped by what they settle. **All four categories are always listed, each with its count, including 0** ("No document in the library for this question"), so a clinician can see what was checked and found empty: *Criteria & grading*, *Terminology, classification & scoring*, *Technical standards*, *Practice guidelines & consensus*.
    - **Literature** (right): Europe PMC.
    - **Elsewhere**: hand-offs to PubMed, OpenEvidence and Consensus, at the foot of the literature column.
 
-   The two columns sit side by side at 960px and wider, and stack below that. Numbered badges match the `[n]` citations in the answer.
+   The two columns sit side by side at 960px and wider, and stack below that. Numbered badges match the `[n]` citations in the prompt and in `/api/search`.
    Documents outside journals show their language (`Deutsch`, `Español`) with the original title and an italic English gloss, and "c." before years taken from file metadata.
 6. **Header controls are one family:** Databases (pill), region (pill that opens a menu) and theme (round). All three are 36px high with the same border, a tint on hover and a press scale. On narrow screens, Databases collapses to its icon.
 7. **Region** reorders documents *within* each group: first the user's region (tagged with its code, e.g. `US`), then international bodies (`International`), then other regions' societies. It never lets a less relevant document jump ahead of a more relevant one from the same tier, and never changes group membership. If the region's societies have no documents in the library yet, a notice says so and links to them. An existing answer is re-asked, because the region is part of the prompt.

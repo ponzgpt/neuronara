@@ -82,27 +82,6 @@ test("national documents are verifiable and honest about their year", () => {
   }
 });
 
-test("cleanAnswer keeps cited, supported plain text and rejects the rest", async () => {
-  const { cleanAnswer } = await import("./answer.ts");
-  const texts = ["Gold Coast criteria (2020) are more sensitive than Awaji. AANEM.", "Awaji 2008 requires fasciculation potentials.", "Unrelated."];
-  const ok = cleanAnswer("**Direct answer**\n\nGold Coast is more sensitive [1][2].\n\n**Bottom line:** Use Gold Coast [1].", texts)!;
-  assert.doesNotMatch(ok, /\*\*|Direct answer/);
-  assert.match(ok, /\[1, 2\]/);
-  assert.match(ok, /\n\nBottom line: Use Gold Coast \[1\]\./);
-  assert.equal(cleanAnswer("Gold Coast is more sensitive.", texts), null);         // no citations
-  assert.equal(cleanAnswer("Gold Coast is more sensitive [9].", texts), null);      // cites a source that doesn't exist
-  assert.equal(cleanAnswer("Fine [1]. Also [9].", texts), "Fine [1].");             // fake ref removed, its sentence dropped
-  const mixed = cleanAnswer("Sourced claim [1]. Invented claim with no source. Another sourced one [2].\n\nBottom line: No cite here.", texts)!;
-  assert.equal(mixed, "Sourced claim [1]. Another sourced one [2].");              // uncited sentences and uncited bottom line dropped
-  // Invented specifics under a real citation: numbers and acronyms must appear in the cited source.
-  assert.equal(cleanAnswer("Gold Coast has 4 grades [1].", texts), null);           // "4" isn't in source 1
-  assert.equal(cleanAnswer("It measures the CMAP amplitude [1].", texts), null);    // "CMAP" isn't in source 1
-  assert.match(cleanAnswer("Published in 2020 by AANEM [1].", texts)!, /2020 by AANEM/); // both are in source 1
-  assert.match(cleanAnswer("Awaji dates from 2008 [2]. Gold Coast dates from 2020 [1].", texts)!, /2008.*2020/);
-  assert.match(cleanAnswer("Awaji dates from 2020 [2]. Gold Coast dates from 2020 [1].", texts)!, /^Gold Coast dates from 2020 \[1\]\.$/); // right year, wrong source: dropped
-});
-
-
 test("language detection and glossary", async () => {
   const { detectLang, translate, cognate } = await import("./lang.ts");
   assert.equal(detectLang("¿Cómo se gradúa el túnel carpiano?"), "es");

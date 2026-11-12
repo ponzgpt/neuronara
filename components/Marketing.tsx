@@ -1,9 +1,15 @@
 // What Neuronara does, shown below the search while the page is idle. Copy: UK English, plain, direct.
 import { LIBRARY } from "@/lib/library";
+import { rank } from "@/lib/search";
+import { tierOf } from "@/lib/catalog";
+
+// A real result, ranked from the library at render time, never typed in by hand.
+const EXAMPLE = "Awaji vs Gold Coast";
+const top = rank(LIBRARY, EXAMPLE).slice(0, 2);
 
 const FEATURES = [
   { title: "Every standard in one place", body: "Diagnostic criteria, terminology, technical standards and protocols from the societies that write them. Each one is linked to its source." },
-  { title: "Compares instead of guessing", body: "When societies disagree or a version changes, Neuronara shows each side with its citation. If the sources don't settle the question, it says so." },
+  { title: "Compares instead of guessing", body: "When societies disagree or a version changes, Neuronara shows each side with its source, and marks what is superseded. If nothing in the library matches, it says so." },
   { title: "Speaks neurophysiology", body: "Type the way you talk at the reporting desk: CTS, NCSE, LPD, SSEP, MSLT. Neuronara knows what you mean." },
   { title: "Knows where you practise", body: "BSCN in the UK, ACNS and AANEM in the US, JSCN in Japan. International bodies always, and your local ones first." },
   { title: "Fits your practice", body: "Only carpal tunnels? The whole EEG, EMG and IONM service? Scope Neuronara to what you actually do." },
@@ -14,31 +20,23 @@ const SOCIETIES = ["IFCN", "ILAE", "ACNS", "AANEM", "AASM", "BSCN", "EAN", "PNS"
 
 const FAQ = [
   { q: "Is it free?", a: "Yes, while Neuronara is in pilot. There's no account and nothing to install." },
-  { q: "Where do the answers come from?", a: `From a curated library of ${LIBRARY.length} society guidelines and consensus papers, each checked against its DOI or PubMed record, plus a live search of Europe PMC, which includes MEDLINE. An AI model writes the answer from those sources only and shows you every one.` },
+  { q: "Where do the answers come from?", a: `From a curated library of ${LIBRARY.length} society guidelines and consensus papers, each checked against its DOI or PubMed record, plus a live search of Europe PMC, which includes MEDLINE. Neuronara writes no answers: it ranks those sources and links each one. If you want a written summary, it hands the sources to your own AI assistant.` },
   { q: "Does it replace OpenEvidence or Consensus?", a: "No. They cover all of medicine; Neuronara covers one specialty in depth. When your question is broad, Neuronara passes it to them in one click." },
-  { q: "What happens to my question?", a: "It goes to Europe PMC, and to an AI provider that writes the answer. Neuronara stores nothing. Some free AI providers may keep prompts, which is one more reason never to type patient details." },
+  { q: "What happens to my question?", a: "It goes to Europe PMC. Neuronara stores nothing. If you use the \"Ask your own AI\" links, your question goes to the assistant you choose, which is one more reason never to type patient details." },
   { q: "Who is it for?", a: "Consultants, trainees and clinical physiologists in neurophysiology, and neurologists who carry out their own studies." },
 ];
 
 export function Marketing() {
   return (
     <>
-      <figure className="preview" aria-label="Example answer">
-        <div className="preview-q"><span>Example</span>Awaji or Gold Coast criteria for ALS: what actually changed?</div>
-        <p>
-          The <b>Gold Coast criteria</b> (2020) simplify the diagnosis: progressive motor impairment with upper and lower motor neuron
-          dysfunction in one body region, or lower motor neuron dysfunction in two, once other causes are excluded. They drop the
-          possible/probable/definite categories<sup>1</sup>.
-        </p>
-        <p>
-          <b>Awaji</b> (2008) is still the reference for how EMG findings count: fasciculation potentials carry the same weight as
-          fibrillations when chronic neurogenic change is present<sup>2</sup>.
-        </p>
-        <div className="wording"><span className="eyebrow">Bottom line</span><p>Diagnose with Gold Coast (2020). Interpret the EMG with Awaji (2008).</p></div>
-        <p className="preview-cite">
-          <sup>1</sup> A proposal for new diagnostic criteria for ALS · <em>Clin Neurophysiol</em> 2020<br />
-          <sup>2</sup> Electrodiagnostic criteria for diagnosis of ALS · <em>Clin Neurophysiol</em> 2008
-        </p>
+      <figure className="preview" aria-label="Example result">
+        <div className="preview-q"><span>Example</span><a href={`/?q=${encodeURIComponent(EXAMPLE)}`}>{EXAMPLE}</a></div>
+        {top.map((e) => (
+          <p key={e.id}>
+            <b>{e.title}</b><br />
+            {e.societies.join(" · ")} · {e.year} · {e.retired ? "Superseded" : "Current"} · {tierOf(e.societies, "global") === "international" ? "International" : "National"}
+          </p>
+        ))}
       </figure>
 
       <section className="l-block narrow">
@@ -62,7 +60,7 @@ export function Marketing() {
         <ol className="steps">
           <li><b>Ask</b><span>Type the question as you&apos;d put it to a colleague, abbreviations included.</span></li>
           <li><b>Compare</b><span>See which standard applies, where it differs from the others, and the source for each.</span></li>
-          <li><b>Use</b><span>Take the bottom line into your report, protocol, audit or teaching.</span></li>
+          <li><b>Use</b><span>Take the source into your report, protocol, audit or teaching.</span></li>
         </ol>
       </section>
 
@@ -76,7 +74,7 @@ export function Marketing() {
         <h2>What Neuronara is not</h2>
         <ul className="nots">
           <li><b>Not a substitute for your judgement.</b> It shows you the evidence. You read the trace.</li>
-          <li><b>Not a general chatbot.</b> It answers from published sources and shows you each one.</li>
+          <li><b>Not a general chatbot.</b> It writes no answers: it points to published sources and shows you each one.</li>
           <li><b>Not a place for patient data.</b> Ask about the finding, never about the patient.</li>
         </ul>
       </section>

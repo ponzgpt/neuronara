@@ -1,15 +1,15 @@
 # neuronara
-Clinical neurophysiology reference search with LLM answers. Live: https://neuronara.technoir.cloud
+Clinical neurophysiology reference search with sources one click away and a bring-your-own-AI handoff. Live: https://neuronara.technoir.cloud
 
 ## Commands
 - Check (before every commit and deploy): `npm test && npm run build`
 - Dev: `npm run dev`
-- Deploy: `./scripts/deploy.sh` (see `DEPLOYMENT.md`); keys via `./scripts/set-llm-key.sh`
+- Deploy: `./scripts/deploy.sh` (see `DEPLOYMENT.md`)
 
 ## Non-negotiables
 1. Every external link is verified (`npm run verify:links`) before deploy: a wrong clinical link is a shipping bug.
-2. Answers must work with no LLM key (keyless fallback).
-3. `/api/ask` stays rate-limited per IP (`lib/rate-limit.ts`).
+2. No server-side LLM: nothing here spends money or needs a secret.
+3. `/api/search` stays rate-limited per IP (`lib/rate-limit.ts`).
 4. Leave the Next.js block below as is: `next dev` rewrites it.
 
 <!-- BEGIN:nextjs-agent-rules -->

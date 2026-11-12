@@ -33,18 +33,7 @@ The script refuses a dirty tree, runs `npm test` and `npm run verify:links` (sto
 
 ## Secrets
 
-Answers work with no key at all (a keyless fallback; see the provider table in `README.md`). To improve them, add a key. **Set it yourself on the server so it never passes through chat or the repo.** `scripts/set-llm-key.sh` prompts for the key without echoing it, updates the service and never writes it to disk or shell history:
-
-```bash
-./scripts/set-llm-key.sh openrouter   # free key from https://openrouter.ai/keys
-./scripts/set-llm-key.sh anthropic    # Claude Opus 5, takes precedence when both are set
-```
-
-To turn the keyless fallback off (no key = no written answers): `ssh hoid 'docker service update --env-add LLM_KEYLESS=off neuronara'`.
-
-Env vars survive `scripts/deploy.sh`, because it only swaps the image.
-
-`/api/ask` is rate-limited per IP (20 requests per 10 minutes, see `lib/rate-limit.ts`), so a public URL can't drain the key.
+None. Nothing on the server spends money or needs a key; the only upstream is Europe PMC (open, no key needed). `/api/search` is rate-limited per IP (20 requests per 10 minutes, see `lib/rate-limit.ts`) to stay polite to it.
 
 ## Rollback
 
@@ -58,5 +47,6 @@ ssh hoid 'docker service update --image neuronara:<older-sha> neuronara'
 
 ```bash
 curl -fsS https://neuronara.technoir.cloud/healthz
-curl -fsS https://neuronara.technoir.cloud/api/ask -H 'content-type: application/json' -d '{"q":"MSLT"}' | head -c 300
+curl -fsS 'https://neuronara.technoir.cloud/api/search?q=MSLT' | head -c 300
+curl -fsS https://neuronara.technoir.cloud/llms.txt | head -5
 ```
