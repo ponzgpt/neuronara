@@ -53,16 +53,17 @@ export function StandardsList({ entries, related = [], proxy, region, missing, s
   return (
     <>
       {notice}
-      {/* Every category is always listed, with its count, so an empty one reads "0 documents" rather than vanishing. */}
+      {/* Browsing lists every category with its count, so an empty one reads "0 documents" rather than vanishing.
+          After a search, empty categories are noise next to a two-document answer, so they are left out. */}
       {DOC_TYPES.map((t) => {
         const group = entries
           .filter((e) => e.type === t.id)
           .map((e, i) => ({ e, i, tier: tierOf(e.societies, region) }))
           .sort((a, b) => TIER_ORDER[a.tier] - TIER_ORDER[b.tier] || a.i - b.i);
-        if (!group.length) return (
+        if (!group.length) return searched ? null : (
           <div key={t.id} className="group empty-group">
             <h3 className="group-title">{t.label} <span>0</span></h3>
-            <p>{searched ? "No document in the library for this question." : "No documents."}</p>
+            <p>No documents.</p>
           </div>
         );
         return (
