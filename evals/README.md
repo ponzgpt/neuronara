@@ -1,14 +1,17 @@
 # Neuronara evaluation
 
-A repeatable benchmark of whether Neuronara gives a clinician the right document, the right papers and a faithful cited answer. Questions are phrased the way a neurophysiologist would ask them, in **English, Spanish and German**.
+A repeatable benchmark of whether Neuronara gives a clinician the right document and the right papers. It is retrieval-only: it calls `GET /api/search`, and Neuronara writes no answers. Questions are phrased the way a neurophysiologist would ask them, in **English, Spanish and German**.
 
 ```bash
-npm run dev                                   # in one terminal
-NOLLM=1 npm run eval                          # retrieval + literature only (fast; run the server with LLM_KEYLESS=off)
-SET=heldout3 npm run eval                     # full run including written answers (slow on the keyless tier: ~30 s each, serial)
+npm run build && PORT=3217 node .next/standalone/server.js   # in one terminal (or `npm run dev -- -p 3217`)
+npm run eval                                  # against http://localhost:3217
 BASE=https://neuronara.technoir.cloud npm run eval
 LANGS=es ONLY=cidp,mslt npm run eval          # a subset
 ```
+
+The eval needs a running server and the network (Europe PMC), so it is not part of the check (`npm test && npm run build`).
+
+**Scores before 2026-11-12 included an answer component (0.4 × retrieval + 0.2 × literature + 0.4 × answer) and are not comparable with scores from this version.** Historical figures quoted in the table below were measured that way.
 
 Results are written to `evals/results/` (git-ignored) with every answer, so failures can be read, not just counted.
 
@@ -27,17 +30,15 @@ Results are written to `evals/results/` (git-ignored) with every answer, so fail
 
 ## Scoring (0-100 per question)
 
-`0.4 × retrieval + 0.2 × literature + 0.4 × answer` (`NOLLM=1`: `0.67 × retrieval + 0.33 × literature`).
+`0.67 × retrieval + 0.33 × literature` (the earlier 0.4 / 0.2 weights with the answer part dropped and renormalised).
 
 - **Retrieval**: is a gold document among the six returned, and at what rank? Position 1 is worth the most, and finding every gold document adds the rest. If the library has nothing on the topic (`gold: []`), the score rewards returning nothing rather than six neighbours.
 - **Literature**: share of the first four Europe PMC hits whose title or abstract matches the topic (`lit` regex).
-- **Answer**: written at all; in the language of the question; cites a gold document; contains the key facts (`facts` regexes). With no gold document: does it admit the gap?
-
-The `facts` and `lit` regexes check that an answer is *on topic*. They cannot check it is *correct*: that needs a clinician reading the answers in `evals/results/`.
+The `lit` regex checks that papers are *on topic*. It cannot check they are *correct*: that needs a clinician reading the results in `evals/results/`.
 
 ## Adding a question
 
 ```json
 { "id": "topic", "en": "…", "es": "…", "de": "…(optional)", "gold": ["title regex of the right document"],
-  "facts": ["regex an answer must contain"], "lit": "regex a relevant paper matches", "region": "es (optional)" }
+  "lit": "regex a relevant paper matches", "region": "es (optional)" }
 ```
