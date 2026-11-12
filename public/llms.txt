@@ -1,0 +1,33 @@
+# Neuronara
+
+> Neuronara tells a clinical neurophysiologist (EEG, EMG/NCS, evoked potentials, sleep, IONM) which standard, criteria set, terminology or protocol applies to a question: which document, whether it is current or superseded, whether it is local or international, and where the source is. It is a curated library of clinical neurophysiology standards plus live literature from Europe PMC. Neuronara does not write answers: it supplies sources for the reader's own assistant.
+
+Neuronara is not clinical advice. Results come from published sources and do not replace clinical judgement. Read the cited source before relying on it.
+
+## Search
+
+GET https://neuronara.technoir.cloud/api/search?q=<question>&region=<region>&modalities=<comma-separated>
+
+- q: the question, any of English, Spanish or German (required, max 1000 characters)
+- region: one of global, us, uk, es, de, eu, jp, cn, latam (default global); it changes the ranking and the "tier" of each standard
+- modalities: optional scope, comma-separated, for example EEG,ALS (see the modalities field in /library.json)
+
+Example: https://neuronara.technoir.cloud/api/search?q=Awaji%20vs%20Gold%20Coast&region=global
+
+The same result as a web page, readable without JavaScript: https://neuronara.technoir.cloud/?q=Awaji%20vs%20Gold%20Coast
+
+Response (JSON, CORS open):
+- query, region, modalities: the validated input
+- standards: up to 6 curated documents, best first. Each has n (citation number), title, titleEn (English gloss for non-English documents), societies, journal, year, type (criteria, terminology, technical or practice), retired (true means superseded), tier (local, international or other, relative to the region), modalities, doi, pmid, pmcid, url, openAccess, lang, abstract
+- literature: up to 6 papers from Europe PMC, each with n, title, meta (journal and year), doi, pmid, openAccess, abstract
+- n numbers the sources 1-based: standards first, then literature. Cite them as [n].
+
+Rate limit: 20 requests per 10 minutes per IP (HTTP 429 beyond that). Empty q returns 400.
+
+## Library
+
+GET https://neuronara.technoir.cloud/library.json: every curated document (international journal standards and national society documents) as one JSON array, same fields as above.
+
+## Source
+
+https://github.com/ponzgpt/neuronara
