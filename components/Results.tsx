@@ -5,6 +5,7 @@
 import { citationHref, CONNECTORS } from "@/lib/catalog";
 import type { Entry } from "@/lib/search";
 import type { SearchResult } from "@/lib/types";
+import { AskYourAI } from "@/components/AskYourAI";
 import { StandardsList } from "@/components/StandardsList";
 
 type Props = { q: string; entries: Entry[]; data: SearchResult | null; pending: boolean; limited: boolean; proxy: string; papers: string; region: string; missing: string[] };
@@ -16,6 +17,8 @@ export function Results({ q, entries, data, pending, limited, proxy, papers, reg
   return (
     <div aria-live="polite">
       {limited && <p className="status">Too many searches in a short time: literature is paused for a few minutes. The standards below still work.</p>}
+
+      {data && !pending && data.standards.length + data.literature.length > 0 && <AskYourAI data={data} />}
 
       <div className="results">
         <section className="col" aria-labelledby="col-standards">
