@@ -259,3 +259,10 @@ body:has(dialog[open]) { overflow: hidden; } /* the page behind must not scroll 
 }
 @keyframes rise { from { transform: translateY(24px); opacity: 0; } }
 @media (prefers-reduced-motion: reduce) { .sheet { animation: none !important; } }
+
+/* Weak matches: collapsed under the standards so they never read as answers */
+.related { margin-top: 1.2rem; }
+.related summary { cursor: pointer; font-size: .74rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--text-muted); }
+.related-note { margin: .5rem 0; font-size: .82rem; color: var(--text-muted); }
+.related .list { margin-top: .5rem; }
+.results .related .row { padding-left: 1.3rem; }

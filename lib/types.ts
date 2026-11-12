@@ -5,6 +5,9 @@ import type { Tier } from "./catalog.ts";
 /** A curated standard: the ranker's entry (title, societies, year, retired, type, doi, pmid, url, openAccess, abstract…) plus how it is numbered and tiered. */
 export type Standard = Entry & { n: number; tier: Tier };
 
+/** A weaker match: shares only generic words with the question. Not numbered, not cited, not in the AI prompt. */
+export type Related = Entry & { tier: Tier };
+
 /** A paper from live literature search. */
 export type Paper = {
   n: number;
@@ -17,4 +20,4 @@ export type Paper = {
   abstract: string;
 };
 
-export type SearchResult = { query: string; region: string; modalities: string[]; standards: Standard[]; literature: Paper[] };
+export type SearchResult = { query: string; region: string; modalities: string[]; standards: Standard[]; related: Related[]; literature: Paper[] };

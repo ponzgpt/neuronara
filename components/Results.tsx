@@ -12,6 +12,8 @@ type Props = { q: string; entries: Entry[]; data: SearchResult | null; pending: 
 
 export function Results({ q, entries, data, pending, limited, proxy, papers, region, missing }: Props) {
   const cited = new Map(data?.standards.map((s) => [s.id, s.n]));
+  // With a result, the server's split decides: strong standards (numbered) and related ones. Without one (scope chips only), the full ranked list.
+  const strong: Entry[] = data ? data.standards : entries;
   const literature = data?.literature;
 
   return (
@@ -22,8 +24,8 @@ export function Results({ q, entries, data, pending, limited, proxy, papers, reg
 
       <div className="results">
         <section className="col" aria-labelledby="col-standards">
-          <h2 id="col-standards" className="col-title">Standards <span>{entries.length}</span></h2>
-          <StandardsList entries={entries} proxy={proxy} region={region} missing={missing} searched={q.trim() !== ""} citeNo={(e) => cited.get(e.id)} />
+          <h2 id="col-standards" className="col-title">Standards <span>{strong.length}</span></h2>
+          <StandardsList entries={strong} related={data?.related} proxy={proxy} region={region} missing={missing} searched={q.trim() !== ""} citeNo={(e) => cited.get(e.id)} />
         </section>
 
         <section className="col" aria-labelledby="col-literature">

@@ -1,14 +1,40 @@
 // Curated documents grouped by what they settle (lib/catalog DOC_TYPES). Within each group, relevance order is kept
 // but documents from the user's region come first, then international bodies, then other regions' societies.
 // Region never moves a document across groups or past a more relevant group-mate from the same tier.
-import { citationHref, DOC_TYPES, SOCIETY_SITES, TIER_ORDER, tierOf } from "@/lib/catalog";
+import { citationHref, DOC_TYPES, SOCIETY_SITES, TIER_ORDER, tierOf, type Tier } from "@/lib/catalog";
 import type { Entry } from "@/lib/search";
 
 const LANG = { en: "English", de: "Deutsch", es: "Español" };
 
-type Props = { entries: Entry[]; proxy: string; region: string; missing: string[]; searched: boolean; citeNo: (e: Entry) => number | undefined };
 
-export function StandardsList({ entries, proxy, region, missing, searched, citeNo }: Props) {
+function Row({ e, tier, kind, n, proxy }: { e: Entry; tier: Tier; kind: string; n?: number; proxy: string }) {
+  return (
+    <li className="row">
+      {n && <span className="cite-no" aria-label={`Source ${n}`}>{n}</span>}
+      <a className="title" href={citationHref(e, proxy)} target="_blank" rel="noreferrer" lang={e.lang}>{e.title}</a>
+      {e.titleEn && <p className="title-en">{e.titleEn}</p>}
+      <div className="meta">
+        <span>{kind}</span>
+        <span className="soc">{e.societies.join(" · ")}</span>
+        <span>{e.approxYear ? "c. " : ""}{e.year}</span>
+      </div>
+      <div className="meta">
+        <span className={e.retired ? "tag warn" : "tag current"}>{e.retired ? "Superseded" : "Current"}</span>
+        {tier === "local" && <span className="tag local">Local</span>}
+        {tier === "international" && <span className="tag intl">International</span>}
+        {e.openAccess
+          ? <span className="tag open">Open access</span>
+          : proxy && !e.url && e.doi && <a href={citationHref(e, proxy)} target="_blank" rel="noreferrer">Via your library</a>}
+        {e.lang && e.lang !== "en" && <span className="tag lang" title="Language of the document">{LANG[e.lang]}</span>}
+        {e.pmcid && <a href={`https://europepmc.org/article/PMC/${e.pmcid}`} target="_blank" rel="noreferrer">Full text</a>}
+      </div>
+    </li>
+  );
+}
+
+type Props = { entries: Entry[]; related?: Entry[]; proxy: string; region: string; missing: string[]; searched: boolean; citeNo: (e: Entry) => number | undefined };
+
+export function StandardsList({ entries, related = [], proxy, region, missing, searched, citeNo }: Props) {
     const notice = region !== "global" && missing.length > 0 && (
     <p className="region-note">
       No {missing.map((s, i) => (
@@ -36,35 +62,20 @@ export function StandardsList({ entries, proxy, region, missing, searched, citeN
           <div key={t.id} className="group">
             <h3 className="group-title">{t.label} <span>{group.length}</span></h3>
             <ul className="list">
-              {group.map(({ e, tier }) => {
-                const n = citeNo(e);
-                return (
-                  <li key={e.id} className="row">
-                    {n && <span className="cite-no" aria-label={`Source ${n}`}>{n}</span>}
-                    <a className="title" href={citationHref(e, proxy)} target="_blank" rel="noreferrer" lang={e.lang}>{e.title}</a>
-                    {e.titleEn && <p className="title-en">{e.titleEn}</p>}
-                    <div className="meta">
-                      <span>{t.kind}</span>
-                      <span className="soc">{e.societies.join(" · ")}</span>
-                      <span>{e.approxYear ? "c. " : ""}{e.year}</span>
-                    </div>
-                    <div className="meta">
-                      <span className={e.retired ? "tag warn" : "tag current"}>{e.retired ? "Superseded" : "Current"}</span>
-                      {tier === "local" && <span className="tag local">Local</span>}
-                      {tier === "international" && <span className="tag intl">International</span>}
-                      {e.openAccess
-                        ? <span className="tag open">Open access</span>
-                        : proxy && !e.url && e.doi && <a href={citationHref(e, proxy)} target="_blank" rel="noreferrer">Via your library</a>}
-                      {e.lang && e.lang !== "en" && <span className="tag lang" title="Language of the document">{LANG[e.lang]}</span>}
-                      {e.pmcid && <a href={`https://europepmc.org/article/PMC/${e.pmcid}`} target="_blank" rel="noreferrer">Full text</a>}
-                    </div>
-                  </li>
-                );
-              })}
+              {group.map(({ e, tier }) => <Row key={e.id} e={e} tier={tier} kind={t.kind} n={citeNo(e)} proxy={proxy} />)}
             </ul>
           </div>
         );
       })}
+      {related.length > 0 && (
+        <details className="related">
+          <summary>Related standards ({related.length})</summary>
+          <p className="related-note">These share only general words with your question, such as &ldquo;criteria&rdquo;.</p>
+          <ul className="list">
+            {related.map((e) => <Row key={e.id} e={e} tier={tierOf(e.societies, region)} kind={DOC_TYPES.find((t) => t.id === e.type)!.kind} proxy={proxy} />)}
+          </ul>
+        </details>
+      )}
     </>
   );
 }

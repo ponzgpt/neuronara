@@ -132,10 +132,14 @@ const textOf = (e: Entry) => {
   return c;
 };
 
-export function rank(
-  entries: Entry[], q: string,
-  opts: { modalities?: string[]; boostSocieties?: string[]; localSocieties?: string[] } = {},
-): Entry[] {
+export type Scored = { e: Entry; s: number; specific: number }; // specific = how many non-generic concepts of the question the entry names
+
+export const rank = (entries: Entry[], q: string, opts: RankOpts = {}): Entry[] => rankScored(entries, q, opts).map((x) => x.e);
+
+type RankOpts = { modalities?: string[]; boostSocieties?: string[]; localSocieties?: string[] };
+
+/** Same ordering as rank(), with the score and the number of non-generic concepts matched, so callers can cut off weak matches. */
+export function rankScored(entries: Entry[], q: string, opts: RankOpts = {}): Scored[] {
   setVocabulary(entries);
   const mods = opts.modalities ?? [];
   const pool = mods.length ? entries.filter((e) => e.modalities.some((m) => mods.includes(m))) : entries;
@@ -144,7 +148,7 @@ export function rank(
   const us = units(q).map((u) => { const re = matcher(u.text); return { re, english: u.english, generic: isGeneric(u.text) || (pool.length >= 20 && df(re) > 0.25), weight: u.weight, group: u.group }; });
   const boost = new Set(opts.boostSocieties ?? []);
   const local = new Set(opts.localSocieties ?? []);
-  if (!us.length) return [...pool].sort((a, b) => b.year - a.year);
+  if (!us.length) return [...pool].sort((a, b) => b.year - a.year).map((e) => ({ e, s: 0, specific: 0 }));
   const specificCount = new Set(us.filter((u) => !u.generic).map((u) => u.group)).size;
   // A group is "unknown" only if none of its English alternatives appears anywhere in the library ("sedation", "MRI").
   // Untranslated Spanish/German words don't count: they're unknown to us, not evidence the library lacks the topic.
@@ -165,26 +169,25 @@ export function rank(
       }
       covered = [...coveredGroups.values()].reduce((a, b) => a + b, 0);
       const distinct = coveredGroups.size;
-      if (needsSpecific && !covered) return { e, s: 0 };
+      if (needsSpecific && !covered) return { e, s: 0, specific: 0 };
       // Relevance floor: a document earns its place by naming a concept in its title or tags, or by covering several of the
       // question's concepts in its text. One stray word in an abstract is how "median nerve values" used to return six unrelated guidelines.
-      if (needsSpecific && !strong && distinct < Math.min(3, specificCount)) return { e, s: 0 };
+      if (needsSpecific && !strong && distinct < Math.min(3, specificCount)) return { e, s: 0, specific: 0 };
       // A long question names several concepts. A document covering under half of them isn't an answer, it's a neighbour
       // ("normal values for median nerve conduction" must not return every nerve guideline). Shorthand hit in a title always stays.
-      if (needsSpecific && !strongHigh && specificCount >= 4 && distinct < Math.ceil(specificCount / 2)) return { e, s: 0 };
+      if (needsSpecific && !strongHigh && specificCount >= 4 && distinct < Math.ceil(specificCount / 2)) return { e, s: 0, specific: 0 };
       // Words nobody in the library uses ("sedation", "MRI") are the question's real subject; a neighbour covering only the rest is noise.
-      if (needsSpecific && !strongHigh && distinct <= unknown) return { e, s: 0 };
+      if (needsSpecific && !strongHigh && distinct <= unknown) return { e, s: 0, specific: 0 };
       s += 10 * covered; // covering more of the question's concepts beats repeating one of them
       // A document from the user's own societies is worth reading first; international bodies get a smaller nudge.
       // Capped by the base score, so a region can reorder good matches but can't lift a weak one over a strong one.
       if (e.societies.some((x) => local.has(x))) s += Math.min(4, s * 0.4);
       else if (e.societies.some((x) => boost.has(x))) s += Math.min(1.5, s * 0.15);
       if (e.retired) s *= 0.5;
-      return { e, s };
+      return { e, s, specific: distinct };
     })
     .filter((x) => x.s > 0)
-    .sort((a, b) => b.s - a.s || b.e.year - a.e.year)
-    .map((x) => x.e);
+    .sort((a, b) => b.s - a.s || b.e.year - a.e.year);
 }
 
 /** Europe PMC query attempts, strict to relaxed. Each attempt is groups of alternatives: (a OR b) AND (c OR d).
