@@ -13,8 +13,8 @@ export function AskYourAI({ data }: { data: SearchResult }) {
     try { await navigator.clipboard.writeText(buildPrompt(args)); setCopied(true); setTimeout(() => setCopied(false), 2000); } catch {}
   };
   return (
-    <article className="card answer" aria-labelledby="ask-ai">
-      <span id="ask-ai" className="eyebrow" style={{ marginTop: 0 }}>Ask your own AI</span>
+    <article id="ask-ai" className="card answer">
+      <h2 className="col-title">Ask your own AI</h2>
       <p className="handoff">
         <button type="button" onClick={copy}>{copied ? "Copied" : "Copy prompt"}</button>
         <a href={links.claude} target="_blank" rel="noreferrer">Open in Claude</a>

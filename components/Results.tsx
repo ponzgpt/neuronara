@@ -1,6 +1,6 @@
 "use client";
 // Results, in the order a clinician resolves a question: society standards, grouped by what they settle, then literature.
-// Standards and literature sit side by side on wide screens and stack on narrow ones.
+// Standards and literature sit side by side from 1024 px and stack below it; "Ask your own AI" closes the page.
 // Numbers are the [n] citations of /api/search and of the prompt handed to the reader's own AI.
 import { citationHref, CONNECTORS } from "@/lib/catalog";
 import type { Entry } from "@/lib/search";
@@ -20,7 +20,12 @@ export function Results({ q, entries, data, pending, limited, proxy, papers, reg
     <div aria-live="polite">
       {limited && <p className="status">Too many searches in a short time: literature is paused for a few minutes. The standards below still work.</p>}
 
-      {data && !pending && data.standards.length + data.literature.length > 0 && <AskYourAI data={data} />}
+      {data && !pending && (
+        <p className="count">
+          {data.standards.length} standard{data.standards.length === 1 ? "" : "s"} · {data.literature.length} paper{data.literature.length === 1 ? "" : "s"}
+          {data.standards.length + data.literature.length > 0 && <> · <a href="#ask-ai">Ask your own AI ↓</a></>}
+        </p>
+      )}
 
       <div className="results">
         <section className="col" aria-labelledby="col-standards">
@@ -53,6 +58,8 @@ export function Results({ q, entries, data, pending, limited, proxy, papers, reg
           </p>
         </section>
       </div>
+
+      {data && !pending && data.standards.length + data.literature.length > 0 && <AskYourAI data={data} />}
     </div>
   );
 }
