@@ -48,6 +48,8 @@ export function StandardsList({ entries, related = [], proxy, region, missing, s
     </p>
   );
 
+  if (searched && !entries.length && !related.length) return <>{notice}<p className="empty">No standard in the library matches this question. Try other words, or see the literature.</p></>;
+
   return (
     <>
       {notice}

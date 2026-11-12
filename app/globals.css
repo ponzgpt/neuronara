@@ -274,3 +274,7 @@ body:has(dialog[open]) { overflow: hidden; } /* the page behind must not scroll 
 .abs[open] .abs-more::after { content: "Less"; }
 .meta .open-src { margin-left: auto; font-weight: 700; font-size: .84rem; border: 1px solid var(--border); border-radius: var(--radius-pill); padding: .15rem .7rem; }
 .meta .open-src:hover { background: var(--tint); text-decoration: none; }
+
+/* Edge cases: long titles wrap at 375 px; anchors land below the sticky header */
+.row .title, .title-en, .col-title, .meta { overflow-wrap: anywhere; }
+[id], .row { scroll-margin-top: 4.5rem; }
