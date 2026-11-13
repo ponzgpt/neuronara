@@ -57,7 +57,7 @@ export const SITE_IDENTITY: Record<string, RegExp> = {
   WFN: /world federation of neurology/,
 };
 // Pages that block scripts (Cloudflare) but were opened and read in a real browser. Recorded, dated, and re-check when stale.
-export const VERIFIED_BY_HAND: Record<string, string> = { ILAE: "2026-09-19", consensus: "2026-09-19", openevidence: "2026-09-19" };
+export const VERIFIED_BY_HAND: Record<string, string> = { ILAE: "2026-09-19", consensus: "2026-09-19", openevidence: "2026-09-19", AASM: "2026-11-13", "aasm-manual": "2026-11-13" };
 
 // How each source reaches the clinician:
 //   live  — queried by Neuronara on every question
